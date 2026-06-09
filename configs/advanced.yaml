@@ -1,0 +1,121 @@
+# ============================================
+# PandaSearch — 高级配置（30 分钟深度定制）
+# 完全控制所有配置项
+# ============================================
+
+data_source:
+  table: products
+  schema_discovery:
+    sample_size: 200
+    ignore_patterns: ["id", "created_at", "updated_at"]
+
+fields:
+  title:
+    type: short_text
+    display_name: "商品名称"
+    weight: 1.2
+    searchable: true
+  description:
+    type: long_text
+    display_name: "商品描述"
+    weight: 0.8
+    embedding_strategy: separate
+  brand:
+    type: category
+    display_name: "品牌"
+    searchable: true
+    filterable: true
+    facetable: true
+    weight: 0.8
+  price:
+    type: number
+    display_name: "价格"
+    filterable: true
+    sortable: true
+    formatter: currency
+  rating:
+    type: number
+    display_name: "评分"
+    filterable: true
+    sortable: true
+  category:
+    type: category
+    display_name: "类别"
+    searchable: true
+    filterable: true
+    facetable: true
+    weight: 0.6
+  image_url:
+    type: image_url
+    display_name: "商品图片"
+  status:
+    type: ignore
+
+search:
+  strategies:
+    vector: true
+    fulltext: true
+    sql_filter: true
+  weights:
+    vector: 0.5
+    fulltext: 0.3
+    sql_filter: 0.2
+  rrf:
+    k: 60
+  embedding:
+    model: openai:text-embedding-3-small
+    dimensions: 1536
+    batch_size: 100
+    template: ecommerce
+  fulltext:
+    language: simple
+    highlight: true
+  synonyms:
+    - ["手机", "移动电话", "智能手机"]
+    - ["T恤", "短袖", "T-shirt"]
+  stopwords: ["的", "了", "和", "是", "在"]
+
+presentation:
+  result_template: card
+  fields_order:
+    - image_url
+    - title
+    - price
+    - rating
+    - brand
+    - category
+  card_layout:
+    image_position: top
+    show_labels: false
+    max_title_length: 50
+    badges:
+      - brand
+      - category
+  highlight:
+    enabled: true
+    prefix: "<mark>"
+    suffix: "</mark>"
+  empty_state:
+    title: "未找到相关商品"
+    subtitle: "试试其他关键词，或调整筛选条件"
+    suggestions: true
+
+behavior:
+  debounce_ms: 300
+  suggest_delay_ms: 100
+  page_size: 20
+  max_page_size: 100
+  min_query_length: 1
+  default_sort: relevance
+  cache:
+    query_ttl_seconds: 300
+    suggest_ttl_seconds: 60
+  personalization:
+    enabled: true
+    cold_start_strategy: popular
+    behavior_weights:
+      view: 1
+      click: 3
+      cart: 6
+      favorite: 8
+      purchase: 15

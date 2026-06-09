@@ -1,0 +1,72 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# === Virtual Environments ===
+venv/
+env/
+ENV/
+.venv/
+
+# === IDEs ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# === Environment Variables ===
+.env
+.env.local
+.env.*.local
+
+# === Database ===
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+redis_data/
+volumes/
+
+# === Logs ===
+*.log
+logs/
+
+# === Test Coverage ===
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# === Node.js / React ===
+node_modules/
+*.lock
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# === Build Output ===
+frontend/pandasearch-ui/dist/
+frontend/pandasearch-ui/build/
+
+# === OS ===
+Thumbs.db

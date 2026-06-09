@@ -1,0 +1,8 @@
+name: ecommerce
+formatting: "{title}。{category}品牌{brand}。{description}"
+chunking: false
+weights:
+  title: 1.0
+  brand: 0.8
+  category: 0.6
+  description: 0.5

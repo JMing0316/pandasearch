@@ -1,0 +1,5 @@
+name: default
+formatting: "{fields}"
+chunking: auto
+weights:
+  "*": 0.7

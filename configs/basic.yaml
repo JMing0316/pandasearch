@@ -1,0 +1,31 @@
+# ============================================
+# PandaSearch — 基础配置（5 分钟调优）
+# 在极简基础上微调字段权重和展示
+# ============================================
+
+data_source:
+  table: products
+
+fields:
+  title:
+    weight: 1.2              # 提升标题权重
+  description:
+    weight: 0.8              # 降低描述权重
+  brand:
+    facetable: true           # 品牌作为面过滤
+  price:
+    formatter: currency       # 价格格式化为货币
+
+search:
+  weights:
+    vector: 0.6               # 提升向量搜索权重
+    fulltext: 0.2
+
+presentation:
+  result_template: card
+  fields_order:
+    - image_url
+    - title
+    - brand
+    - price
+    - rating

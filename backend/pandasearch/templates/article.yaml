@@ -1,0 +1,9 @@
+name: article
+formatting: "{title}\n{summary}\n{content}"
+chunking: true
+chunk_size: 512
+chunk_overlap: 50
+weights:
+  title: 1.0
+  summary: 0.7
+  content: 0.5
