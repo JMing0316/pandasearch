@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pandasearch"
 version = "0.1.0"
-description = "🐼 PandaSearch — Universal AI-powered search plugin for PostgreSQL"
-readme = "../README.md"
+description = "PandaSearch - Universal AI-powered search plugin for PostgreSQL"
+readme = {text = "PandaSearch - Universal AI-powered search plugin for PostgreSQL. Configure any table with YAML, get intelligent search in 30 seconds.", content-type = "text/plain"}
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
@@ -36,6 +36,8 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0.2",
     "httpx>=0.27.0",
+    "sentence-transformers>=3.0.0",
+    "torch>=2.0.0",
 ]
 
 [project.optional-dependencies]

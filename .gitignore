@@ -70,3 +70,6 @@ frontend/pandasearch-ui/build/
 
 # === OS ===
 Thumbs.db
+
+# === Models ===
+models/

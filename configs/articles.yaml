@@ -1,0 +1,53 @@
+# ============================================
+# PandaSearch — 文章/博客搜索配置示例
+# ============================================
+
+data_source:
+  table: articles
+
+# 字段微调（可选，Schema 发现会自动推断大部分）
+fields:
+  title:
+    weight: 1.2
+  content:
+    weight: 0.8
+    embedding_strategy: separate
+  author:
+    searchable: false
+    filterable: true
+    facetable: true
+  category:
+    facetable: true
+  tags:
+    type: json
+    searchable: true
+    weight: 0.5
+
+search:
+  weights:
+    vector: 0.5
+    fulltext: 0.4
+    sql_filter: 0.1
+
+presentation:
+  result_template: card
+  fields_order:
+    - title
+    - author
+    - category
+    - published_at
+    - view_count
+  card_layout:
+    image_position: top
+    show_labels: true
+  empty_state:
+    title: "未找到相关文章"
+    subtitle: "试试其他关键词，或调整筛选条件"
+
+behavior:
+  default_sort: relevance
+  sort_options:
+    - { value: "relevance", label: "相关性" }
+    - { value: "newest", label: "最新发布" }
+    - { value: "oldest", label: "最早发布" }
+    - { value: "view_count", label: "阅读量最高" }

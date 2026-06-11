@@ -3,5 +3,13 @@
 # 只需要填写表名，其他全部自动生成！
 # ============================================
 
+# ⚠️ 请将此处的表名替换为你的实际表名
 data_source:
-  table: products
+  table: cases
+
+# 使用本地 BGE-M3 模型生成嵌入（无需 OpenAI API）
+search:
+  embedding:
+    model: bge-m3
+    dimensions: 1024
+    batch_size: 32

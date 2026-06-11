@@ -1,55 +1,63 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: ../frontend/pandasearch-ui
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - VITE_API_URL=http://localhost:8000
-    depends_on:
-      - backend
-
-  backend:
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/pandasearch
-      - REDIS_URL=redis://redis:6379/0
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - APP_DEBUG=true
-    env_file:
-      - ../.env
-    depends_on:
-      - db
-      - redis
-    volumes:
-      - ../configs:/app/configs
-
-  db:
-    image: ankane/pgvector:latest
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=pandasearch
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
-
   redis:
     image: redis:7-alpine
+    container_name: pandasearch-redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - pandasearch-net
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    container_name: pandasearch-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # 连接物理机上的 PostgreSQL（通过 host.docker.internal）
+      - DATABASE_URL=postgresql+asyncpg://postgres:users@192.168.1.14:5432/lawwit_db
+      # 连接 Docker 内的 Redis
+      - REDIS_URL=redis://redis:6379/0
+      - APP_DEBUG=true
+      - APP_ENV=production
+    env_file:
+      - ../.env
+    depends_on:
+      - redis
+    volumes:
+      - ../configs:/app/configs
+      - ../backend/pandasearch:/app/pandasearch
+    networks:
+      - pandasearch-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend/pandasearch-ui
+      dockerfile: Dockerfile
+    container_name: pandasearch-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # 浏览器访问宿主机的 8000 端口
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - pandasearch-net
+    restart: unless-stopped
 
 volumes:
-  postgres_data:
   redis_data:
+
+networks:
+  pandasearch-net:
+    driver: bridge

@@ -1,0 +1,251 @@
+data_source:
+  table: cases
+  primary_key: id
+
+fields:
+  id:
+    type: ignore
+    searchable: false
+  case_sn:
+    type: short_text
+    display_name: 案件编号
+    searchable: true
+    filterable: false
+    sortable: true
+    weight: 0.9
+  case_no:
+    type: short_text
+    display_name: 案号
+    searchable: true
+    filterable: false
+    sortable: false
+    weight: 0.8
+  title:
+    type: short_text
+    display_name: 标题
+    searchable: true
+    filterable: false
+    sortable: true
+    weight: 1.0
+  case_type:
+    type: category
+    display_name: 案件类型
+    searchable: false
+    filterable: true
+    sortable: true
+    facetable: true
+    weight: 0.5
+  case_reason:
+    type: short_text
+    display_name: 案由
+    searchable: true
+    filterable: false
+    sortable: false
+    weight: 0.7
+  case_desc:
+    type: long_text
+    display_name: 案件描述
+    searchable: true
+    filterable: false
+    sortable: false
+    weight: 0.8
+  status:
+    type: category
+    display_name: 状态
+    searchable: false
+    filterable: true
+    sortable: true
+    facetable: true
+    weight: 0.4
+  case_from:
+    type: category
+    display_name: 案件来源
+    searchable: false
+    filterable: true
+    sortable: true
+    facetable: true
+    weight: 0.4
+  branch_name:
+    type: category
+    display_name: 分所
+    searchable: false
+    filterable: true
+    sortable: true
+    facetable: true
+    weight: 0.4
+  lawyer_name:
+    type: short_text
+    display_name: 承办律师
+    searchable: true
+    filterable: true
+    sortable: true
+    weight: 0.7
+  lawyer_id_number:
+    type: ignore
+    searchable: false
+  is_conflict:
+    type: category
+    display_name: 利益冲突
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  is_abandoned:
+    type: category
+    display_name: 已放弃
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  is_cancelled:
+    type: category
+    display_name: 已取消
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  is_legal_help:
+    type: category
+    display_name: 法律援助
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  is_foreign_related:
+    type: category
+    display_name: 涉外案件
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  foreign_related_country:
+    type: category
+    display_name: 涉外国家
+    searchable: false
+    filterable: true
+    facetable: true
+    weight: 0.3
+  appoint_organization:
+    type: short_text
+    display_name: 指派机构
+    searchable: true
+    filterable: true
+    sortable: false
+    weight: 0.5
+  amount_paid:
+    type: number
+    display_name: 已付金额
+    searchable: false
+    filterable: true
+    sortable: true
+    weight: 0.3
+    formatter: currency
+  bill_total_amount:
+    type: number
+    display_name: 账单总额
+    searchable: false
+    filterable: true
+    sortable: true
+    weight: 0.3
+    formatter: currency
+  create_time:
+    type: date
+    display_name: 创建时间
+    searchable: false
+    filterable: true
+    sortable: true
+    weight: 0.2
+  update_time:
+    type: date
+    display_name: 更新时间
+    searchable: false
+    filterable: true
+    sortable: true
+    weight: 0.2
+  crawl_id:
+    type: ignore
+    searchable: false
+  crawled_at:
+    type: date
+    display_name: 爬取时间
+    searchable: false
+    filterable: true
+    sortable: true
+    weight: 0.1
+  source_url:
+    type: ignore
+    searchable: false
+  created_at:
+    type: ignore
+    searchable: false
+  updated_at:
+    type: ignore
+    searchable: false
+
+search:
+  strategies:
+    vector: true
+    fulltext: true
+    sql_filter: true
+  weights:
+    vector: 0.5
+    fulltext: 0.3
+    sql_filter: 0.2
+  embedding:
+    # model: BAAI/bge-small-zh-v1.5
+    # dimensions: 512
+    # batch_size: 100
+    model: bge-m3
+    dimensions: 1024      # BGE-M3 固定 1024 维
+    batch_size: 32        # 本地模型可以适当调小，根据内存调整
+    template: default
+  fulltext:
+    language: simple
+    highlight: true
+
+presentation:
+  result_template: card
+  fields_order:
+    - title
+    - case_sn
+    - case_no
+    - case_type
+    - case_reason
+    - status
+    - lawyer_name
+    - branch_name
+    - amount_paid
+    - bill_total_amount
+    - create_time
+  highlight:
+    enabled: true
+    prefix: "<mark>"
+    suffix: "</mark>"
+  empty_state:
+    title: 未找到相关案件
+    subtitle: 试试其他关键词，或调整筛选条件
+    suggestions: true
+
+behavior:
+  debounce_ms: 300
+  suggest_delay_ms: 100
+  page_size: 20
+  max_page_size: 100
+  min_query_length: 1
+  default_sort: relevance
+  sort_options:
+    - value: relevance
+      label: 相关性
+    - value: create_time_desc
+      label: 最新创建
+    - value: create_time_asc
+      label: 最早创建
+    - value: amount_paid_desc
+      label: 金额从高到低
+    - value: amount_paid_asc
+      label: 金额从低到高
+    - value: bill_total_amount_desc
+      label: 账单从高到低
+  cache:
+    query_ttl_seconds: 300
+    suggest_ttl_seconds: 60

@@ -17,12 +17,15 @@ async def init_db(db_url: Optional[str] = None) -> None:
     from pandasearch.config import Settings
     settings = Settings()
     dsn = db_url or settings.DATABASE_URL
+    # asyncpg expects "postgresql://" or "postgres://", not SQLAlchemy's "postgresql+asyncpg://"
+    dsn = dsn.replace("postgresql+asyncpg://", "postgresql://", 1)
 
     _pool = await asyncpg.create_pool(
         dsn=dsn,
         min_size=5,
         max_size=20,
         command_timeout=60,
+        ssl=False,
     )
 
 
